@@ -33,6 +33,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseStream;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.RenderKit;
+import jakarta.faces.lifecycle.Lifecycle;
 import org.mockito.Mockito;
 
 /**
@@ -144,6 +145,11 @@ public class ContextMocker extends FacesContext {
 
   @Override
   public void responseComplete() {
+    throw new UnsupportedOperationException("Not supported.");
+  }
+
+  @Override
+  public Lifecycle getLifecycle() {
     throw new UnsupportedOperationException("Not supported.");
   }
   
@@ -327,6 +333,11 @@ public class ContextMocker extends FacesContext {
 
     @Override
     public String encodeWebsocketURL(String string) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
+
+    @Override
+    public void release() {
         throw new UnsupportedOperationException("Not supported.");
     }
   }

@@ -48,7 +48,6 @@ import com.sun.jsftemplating.util.fileStreamer.FileStreamer;
 
 import jakarta.faces.FactoryFinder;
 import jakarta.faces.application.StateManager;
-import jakarta.faces.application.StateManager.SerializedView;
 import jakarta.faces.application.ViewHandler;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIViewRoot;
@@ -57,6 +56,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.context.ResponseWriter;
 import jakarta.faces.render.RenderKit;
 import jakarta.faces.render.RenderKitFactory;
+import jakarta.faces.view.ViewDeclarationLanguage;
+import jakarta.faces.view.StateManagementStrategy;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -785,7 +786,12 @@ public class LayoutViewHandler extends ViewHandler {
         } else {
             // b/c we pre-processed the ViewTree, we can just add it...
             StateManager stateManager = context.getApplication().getStateManager();
-            SerializedView view = stateManager.saveSerializedView(context);
+            //Object view = stateManager.saveView(context);
+
+            ViewDeclarationLanguage viewDeclarationLanguage = context.getApplication().getViewHandler()
+                                .getViewDeclarationLanguage(context, root.getViewId());
+            StateManagementStrategy stateManagementStrategy = viewDeclarationLanguage.getStateManagementStrategy(context, root.getViewId());
+            Object view = stateManagementStrategy.saveView(context);
 
             // New versions of JSF 1.2 changed the contract so that state is
             // always written (client and server state saving)

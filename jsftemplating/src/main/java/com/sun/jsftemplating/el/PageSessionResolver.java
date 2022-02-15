@@ -22,8 +22,9 @@ import java.util.Map;
 
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.el.EvaluationException;
-import jakarta.faces.el.VariableResolver;
+import jakarta.el.ELException;
+import jakarta.el.ELResolver;
+import jakarta.el.ELContext;
 
 /**
  * <p>
@@ -35,7 +36,7 @@ import jakarta.faces.el.VariableResolver;
  *
  * @author Ken Paulsen (ken.paulsen@sun.com)
  */
-public class PageSessionResolver extends VariableResolver {
+public class PageSessionResolver {
 
     /**
      * <p>
@@ -49,7 +50,6 @@ public class PageSessionResolver extends VariableResolver {
      * The original <code>VariableResolver</code>.
      * </p>
      */
-    private VariableResolver _origVariableResolver = null;
 
     /**
      * <p>
@@ -58,53 +58,7 @@ public class PageSessionResolver extends VariableResolver {
      */
     private static final String PAGE_SESSION_KEY = "_ps";
 
-    /**
-     * <p>
-     * Constructor.
-     * </p>
-     */
-    public PageSessionResolver(VariableResolver orig) {
-        super();
-        _origVariableResolver = orig;
-    }
-
-    /**
-     * <p>
-     * This first delegates to the original <code>VariableResolver</code>, it then checks "page session" to see if the value
-     * exists.
-     * </p>
-     */
-    @Override
-    public Object resolveVariable(FacesContext context, String name) throws EvaluationException {
-        Object result = null;
-        // Check to see if expression explicitly asks for PAGE_SESSION
-        if (name.equals(PAGE_SESSION)) {
-            // It does, return the Map
-            UIViewRoot root = context.getViewRoot();
-            result = getPageSession(context, root);
-            if (result == null) {
-                // No Map! That's ok, create one...
-                result = createPageSession(context, root);
-            }
-        } else {
-            if (_origVariableResolver != null) {
-                // Not explicit, let original resolver do its thing first...
-                result = _origVariableResolver.resolveVariable(context, name);
-            }
-
-            if (result == null) {
-                // Original resolver couldn't find anything, check page session
-                Map<String, Serializable> map = getPageSession(context, (UIViewRoot) null);
-                if (map != null) {
-                    result = map.get(name);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
+   /**
      * <p>
      * This method provides access to the "page session" <code>Map</code>. If it doesn't exist, it returns
      * <code>null</code>. If the given <code>UIViewRoot</code> is null, then the current <code>UIViewRoot</code> will be

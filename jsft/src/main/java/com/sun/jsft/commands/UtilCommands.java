@@ -27,8 +27,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import jakarta.faces.component.UIComponent;
-import jakarta.faces.bean.ManagedBean;
-import jakarta.faces.bean.ApplicationScoped;
+import jakarta.inject.Named;
+import jakarta.enterprise.context.ApplicationScoped;
 
 
 /**
@@ -38,7 +38,7 @@ import jakarta.faces.bean.ApplicationScoped;
  *  @author  Ken Paulsen (kenapaulsen@gmail.com)
  */
 @ApplicationScoped
-@ManagedBean(name="util")
+@Named(value="util")
 public class UtilCommands {
 
     /**
